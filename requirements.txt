@@ -1,0 +1,5 @@
+bcrypt
+pyramid
+pyramid_jinja2
+pytest
+waitress
