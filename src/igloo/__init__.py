@@ -7,6 +7,7 @@ from pyramid.session import SignedCookieSessionFactory
 from igloo import auth
 from igloo import blog
 from igloo import db
+from igloo import serializer
 from igloo import routes
 
 
@@ -14,9 +15,13 @@ def main(settings={
     'SECRET_KEY': 'dev',
     'DATABASE': os.path.join(os.getcwd(), 'igloo.sql'),
 }):
-    # create and configure the app
+    # create and configure the app.
     config = Configurator(settings=settings)
-    config.set_session_factory(SignedCookieSessionFactory('secret'))
+
+    # set up session.
+    session_factory = SignedCookieSessionFactory(
+        'secret', serializer=serializer.Serializer())
+    config.set_session_factory(session_factory)
 
     # set up jinja2.
     config.include('pyramid_jinja2')
