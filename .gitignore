@@ -1,5 +1,6 @@
 venv/
 
+*.sql
 *.pyc
 __pycache__/
 
