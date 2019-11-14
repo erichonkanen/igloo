@@ -1,5 +1,4 @@
 bcrypt
-click
 pyramid
 pyramid_jinja2
 pytest
