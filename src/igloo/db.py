@@ -21,7 +21,7 @@ def connection(event):
 def get_db(registry):
     db = registry.settings.get('DATABASE')
 
-    if db:
+    if not registry.get('db'):
         registry.db = sqlite3.connect(
             db,
             detect_types=sqlite3.PARSE_DECLTYPES
@@ -31,14 +31,18 @@ def get_db(registry):
     return registry.db
 
 
-# TODO: create cli command to init the db.
-def init_db(config):
-    db = get_db(config.registry)
+def init_db(registry):
+    db = get_db(registry)
+    db_exists = os.path.exists('igloo.sql')
+    is_testing = registry.settings.get('TESTING')
 
     cwd = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
-    with open(os.path.join(cwd, 'schema.sql'), 'rb') as f:
-        db.executescript(f.read().decode('utf8'))
+    # only create the db if it doesn't exist because too lazy
+    # to create a proper pyramid paste serve script.
+    if not db_exists or is_testing:
+        with open(os.path.join(cwd, 'schema.sql'), 'rb') as f:
+            db.executescript(f.read().decode('utf8'))
 
-    print('Initialized the database.')
+        print('Initialized the database.')

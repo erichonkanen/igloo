@@ -34,6 +34,7 @@ def main(settings={
     config.add_static_view(name='static', path='static')
 
     # set up database.
+    db.init_db(config.registry)
     config.add_subscriber(db.connection, NewRequest)
     config.add_request_method(auth.user, 'user')
 
